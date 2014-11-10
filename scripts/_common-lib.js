@@ -1,5 +1,5 @@
 (function(global) {
-	
+
 	/**=================*
 	 * Wires
 	 *==================*/
@@ -8,14 +8,14 @@
 		//one value and an array of entities the wire is connected to.
 		this.value = false;
 		this.connections = [];
-	}	
+	}
 
 	Wire.list = function(num) {
 		return Array.apply(null, new Array(num)).map(function() { return new Wire(); });
 	}
 
 	Wire.draw = function(wire, ctx){
-		//for simplicities sake, it only draws one line, 
+		//for simplicities sake, it only draws one line,
 		//however, the wire may be connected to more,
 		//this is usefull in the case of joins in the middle of a wire.
 		if(wire.value){
@@ -49,9 +49,9 @@
 	 * Levers
 	 *==================*/
 
-	function Lever(x, y, wire){ 
-	 	this.x = x;	
-	 	this.y = y;	
+	function Lever(x, y, wire){
+	 	this.x = x;
+	 	this.y = y;
 	 	this.r = 0;
 	 	this.s = 1;
 	 	this.wire = wire;
@@ -59,7 +59,7 @@
 
 	Lever.draw = function(lever, ctx){
 	 	ctx.beginPath();
-	 	ctx.setTransform(lever.s, 0, 0, lever.s, lever.x, lever.y);	
+	 	ctx.setTransform(lever.s, 0, 0, lever.s, lever.x, lever.y);
 	 	ctx.rotate(lever.r*(Math.PI/180));
 	 	ctx.fillStyle = "#000000";
 	 	ctx.fillRect(0, 0, 30, 60);
@@ -67,12 +67,12 @@
 	 		ctx.fillStyle = "#AAFFAA";
 	 		ctx.fillRect(0, 30, 30, 30);
 	 		ctx.fillStyle = "#000000";
-	 		ctx.fillText("on", 4, 50);	
+	 		ctx.fillText("on", 4, 50);
 	 	}else{
 	 		ctx.fillStyle = "#FFAAAA";
 	 		ctx.fillRect(0, 0, 30, 30);
 	 		ctx.fillStyle = "#000000";
-	 		ctx.fillText("off", 4, 20);	
+	 		ctx.fillText("off", 4, 20);
 	 	}
 	}
 
@@ -81,8 +81,8 @@
 	 *==================*/
 
 	function Lamp(x,y,wire){
-	 	this.x = x;	
-	 	this.y = y;	
+	 	this.x = x;
+	 	this.y = y;
 	 	this.r = 0;
 	 	this.s = 1;
 	 	this.wire = wire;
@@ -90,7 +90,7 @@
 
 	Lamp.draw = function(lamp, ctx){
 	 	ctx.beginPath();
-	 	ctx.setTransform(lamp.s, 0, 0, lamp.s, lamp.x, lamp.y - 10);	
+	 	ctx.setTransform(lamp.s, 0, 0, lamp.s, lamp.x, lamp.y - 10);
 	 	if(lamp.wire.value){
 	 		grd = ctx.createRadialGradient(10, 10, 0, 10, 10, 20);
 	 		grd.addColorStop(0, "rgba(100, 255, 100, 1.0)");
@@ -105,8 +105,8 @@
 	 		ctx.fillStyle = "#BBBBBB";
 	 		ctx.fillRect(0, 0, 20, 20);
 	 		ctx.fillStyle = "#888888";
-	 		ctx.fillText("off", 0, 15);	
-	 	}	
+	 		ctx.fillText("off", 0, 15);
+	 	}
 	 	ctx.stroke();
 	 	ctx.fillStyle = "#000000";
 	}
@@ -114,7 +114,7 @@
 	/**=================*
 	 * Joins
 	 *==================*/
-	 
+
 	function Join(x,y,wire1,wire2){
 	 	this.x = x;
 	 	this.y = y;
@@ -124,7 +124,7 @@
 
 	Join.draw = function(join, ctx){
 	 	ctx.beginPath();
-	 	ctx.setTransform(1, 0, 0, 1, join.x-2, join.y-2);	
+	 	ctx.setTransform(1, 0, 0, 1, join.x-2, join.y-2);
 	 	if(join.wire1.value){
 	 		ctx.fillStyle = "#00AA00";
 	 		ctx.fillRect(-1, -1, 6, 6);
@@ -152,7 +152,7 @@
 		this.y = y;
 		this.r = 0;
 		this.s = 1;
-		
+
 		this.wireIn1 = wireIn1;
 		this.wireIn2 = wireIn2;
 		this.wireOut = wireOut;
@@ -161,7 +161,7 @@
 	Gate.draw = function(gate, ctx){
 		ctx.strokeStyle = "#000000";
 		ctx.beginPath();
-		ctx.setTransform(1, 0, 0, 1, gate.x, gate.y);	
+		ctx.setTransform(1, 0, 0, 1, gate.x, gate.y);
 		switch(gate.kind){
 		case Gate.tNAND:
 			ctx.strokeStyle = "#BBBBBB";
@@ -173,16 +173,16 @@
 			ctx.arc(37, 0, 7, 0, Math.PI*2);
 			break;
 		case Gate.AND:
-			ctx.lineTo(30, 0);	
+			ctx.lineTo(30, 0);
 			ctx.arc(0, 30, 30, 0, Math.PI);
-			ctx.lineTo(-30, 0);	
+			ctx.lineTo(-30, 0);
 			ctx.closePath();
 			break;
 		case Gate.OR:
 			ctx.arc(0, 0, 30, 0, Math.PI);
-			ctx.moveTo(30, 0);	
+			ctx.moveTo(30, 0);
 			ctx.arc(0, 30, 30, 0, Math.PI);
-			ctx.lineTo(-30, 0);	
+			ctx.lineTo(-30, 0);
 			break;
 		case Gate.XOR:
 			ctx.arc(0, 0, 30, 0-(Math.PI/2), Math.PI/2);
@@ -204,37 +204,37 @@
 
 	function createComposite(gates, joins, lamps, levers, wires, drawComments){
 		drawComments = drawComments || function() {};
-		
+
 		gates.forEach(function(gate) {
 			switch(gate.kind){
 			case Gate.tNAND:
 			case Gate.NAND:
 				gate.wireIn1.connections.push({x:gate.x,y:gate.y - 15});
-				gate.wireIn2.connections.push({x:gate.x,y:gate.y + 15}); 
+				gate.wireIn2.connections.push({x:gate.x,y:gate.y + 15});
 				gate.wireOut.connections.push({x:gate.x + 43,y:gate.y});
 				break;
 			case Gate.AND://AND
 				gate.wireIn1.connections.push({x:gate.x-15,y:gate.y});
-				gate.wireIn2.connections.push({x:gate.x+15,y:gate.y}); 
+				gate.wireIn2.connections.push({x:gate.x+15,y:gate.y});
 				gate.wireOut.connections.push({x:gate.x,y:gate.y+60});
 				break;
 			case Gate.OR://OR
 				gate.wireIn1.connections.push({x:gate.x-15,y:gate.y + 25});
-				gate.wireIn2.connections.push({x:gate.x+15,y:gate.y + 25}); 
+				gate.wireIn2.connections.push({x:gate.x+15,y:gate.y + 25});
 				gate.wireOut.connections.push({x:gate.x,y:gate.y+60});
 				break;
 			case Gate.XOR://XOR
 				gate.wireIn1.connections.push({x:gate.x + 10,y:gate.y - 15});
-				gate.wireIn2.connections.push({x:gate.x + 10,y:gate.y + 15}); 
+				gate.wireIn2.connections.push({x:gate.x + 10,y:gate.y + 15});
 				gate.wireOut.connections.push({x:gate.x + 60,y:gate.y});
 				break;
 			}
 		});
-		
+
 		levers.forEach(function(lever) {
 			lever.wire.connections.push({x:lever.x+15,y:lever.y+30});
 		});
-		
+
 		lamps.forEach(function(lamp) {
 			lamp.wire.connections.push({x:lamp.x+10,y:lamp.y});
 		});
@@ -281,12 +281,12 @@
 			});
 
 			joins.forEach(function(join) {
-				join.wire2.value = join.wire1.value 
+				join.wire2.value = join.wire1.value
 			});
 		}
 
 		function drawFrame(gates, wires, joins, lamps, levers, ctx){
-			ctx.setTransform(1,0,0,1,0,0);	
+			ctx.setTransform(1,0,0,1,0,0);
 			ctx.clearRect(0,0,1000,1000);
 
 			wires.forEach(function(wire) {
@@ -316,7 +316,7 @@
 	/**=================*
 	 * Common page setup
 	 *==================*/
-	
+
 	var canvasEl = document.getElementById('gates')
 	  , ctx = canvasEl.getContext('2d');
 
